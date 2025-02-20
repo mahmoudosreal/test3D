@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebAR Debug</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer@latest"></script>
+</head>
+<body>
+    <h1>See Clockhead in AR!</h1>
+
+    <model-viewer 
+        id="model-viewer"
+        src="https://raw.githubusercontent.com/TheDude12/xioverse-ar/main/Burger.glb"
+        alt="Astronaut Model"
+        auto-rotate
+        camera-controls
+        ar
+        ar-modes="scene-viewer quick-look">
+    </model-viewer>
+
+    <script>
+        const modelViewer = document.querySelector("#model-viewer");
+
+        modelViewer.addEventListener("error", (event) => {
+            console.error("Model Error:", event);
+            alert("Model failed to load. Check the console for errors.");
+        });
+
+        modelViewer.addEventListener("load", () => {
+            console.log("Model Loaded Successfully!");
+            alert("Model Loaded Successfully!");
+        });
+    </script>
+</body>
+</html>
