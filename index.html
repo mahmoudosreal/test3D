@@ -2,24 +2,81 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>AR 3D Object Viewer</title>
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>AR Viewer</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer@^2.1.1/dist/model-viewer.min.js"></script>
+    <script nomodule src="https://unpkg.com/@google/model-viewer@^2.1.1/dist/model-viewer-legacy.js"></script>
     <style>
-        body { margin: 0; padding: 0; }
-        model-viewer { width: 100vw; height: 100vh; }
+        body { 
+            margin: 0; 
+            padding: 0;
+            overflow: hidden;
+        }
+        model-viewer { 
+            width: 100vw; 
+            height: 100vh;
+        }
+        #ar-prompt {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 20px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 32px;
+            font-family: Arial, sans-serif;
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <h1>Hide Your Potato</h1>
+    <h1>Hide hour Cheese</h1>
     <model-viewer 
+        id="model-viewer"
         src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
         alt="3D Model"
-        ar 
+        ar
         ar-modes="webxr scene-viewer quick-look"
         camera-controls
         auto-rotate
         environment-image="neutral"
-        shadow-intensity="1">
+        shadow-intensity="1"
+        xr-environment
+        touch-action="pan-y"
+        interaction-prompt="none"
+        ar-status="not-presenting">
+        
+        <button id="ar-button" slot="ar-button">
+            View in AR
+        </button>
+        
+        <div id="ar-prompt">
+            Tap the AR button to view in your space
+        </div>
     </model-viewer>
+
+    <script>
+        const modelViewer = document.querySelector('#model-viewer');
+        const arButton = document.querySelector('#ar-button');
+        const arPrompt = document.querySelector('#ar-prompt');
+        
+        // Check if AR is available
+        modelViewer.addEventListener('ar-status', (event) => {
+            if (event.detail.status === 'not-presenting') {
+                if (event.detail.message.includes('not supported')) {
+                    arButton.textContent = 'AR not available';
+                    arButton.disabled = true;
+                } else {
+                    arPrompt.style.display = 'block';
+                }
+            }
+        });
+        
+        // Handle errors
+        modelViewer.addEventListener('error', (event) => {
+            console.error('ModelViewer error:', event.detail);
+        });
+    </script>
 </body>
 </html>
